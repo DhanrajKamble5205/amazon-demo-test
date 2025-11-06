@@ -6,9 +6,5 @@ test('test', async ({ page }) => {
 
   await login.login_url()
   await login.login('tomsmith','SuperSecretPassword!')
-
-  // await page.getByRole('textbox', { name: 'Username' }).fill('tomsmith');
-  // await page.getByRole('textbox', { name: 'Password' }).fill('SuperSecretPassword!');
-  // await page.getByRole('button', { name: ' Login' }).click();
-  // await page.getByRole('link', { name: 'Logout' }).click();
+  
 });
