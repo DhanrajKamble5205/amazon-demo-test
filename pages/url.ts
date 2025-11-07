@@ -8,8 +8,9 @@ export class Urls {
   }
 
   async openGmailUrl() {
-    const newTab = await this.page.context().newPage();
-    await newTab.goto("https://accounts.google.com/signin", { timeout: 60000 });
-    await newTab.pause();
-  }
+  const newTab = await this.page.context().newPage();
+  await newTab.goto("https://accounts.google.com/signin", { timeout: 60000 });
+  return newTab;
+}
+
 }
