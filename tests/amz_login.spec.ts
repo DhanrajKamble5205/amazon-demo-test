@@ -14,6 +14,14 @@ test.describe('Amazon Login Functionality', () => {
         await url.openAmazonUrl();
         await login.AmzLoginAction(username, password);
         await login.AmzLoginVerify();
+        await login.amzNavigationBarItems();
         await login.AmzLogoff();  
     });
+
+    test('Verify values are displayed', async ({ page, browser }) => {
+
+        const login = new LoginPage(page);
+
+    });
+
 });
