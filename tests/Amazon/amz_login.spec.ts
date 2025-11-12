@@ -3,29 +3,23 @@ import { LoginPage } from '../../pages/amz-login'; // import the login page by c
 import { Urls } from '../../pages/url';
 
 
-test.describe('Amazon and Gmail Login Tests', () => {
-
+test.describe('Amazon Login Tests', () => {
+        
     test('Amazon Page login', async ({ page, browser }) => {
         const login = new LoginPage(page);
         const url = new Urls(page);
 
         await url.openAmazonUrl();
-        await login.AmzLoginAction('kdhanraj21@gmail.com')
-        await login.gmailAccount(browser );
-        // const gmailPage = await url.openGmailUrl();
-        // const gmailLogin = new LoginPage(gmailPage);
-        // await gmailLogin.gmailAccount('kdhanraj21@gmail.com', 'Anurag@21');
-        
+        await login.AmzLoginAction('kdhanraj21@gmail.com', 'Open@121Pass');     
+        await browser.close() 
+       // await login.AmzLoginVerify();
+        //await login.AmzLogoff();  
     });
 
-    // test('Gmail Page login', async ({ page }) => {
-    //     const login = new LoginPage(page);
-    //     const url = new Urls(page)
+    test("verify amazon login successfully", async ({ page}) => {   
+        const login = new LoginPage(page);
+     
+        await login.AmzLoginVerify();
+    });
 
-    //    // await page.pause();
-    //     // await page.goto('https://workspace.google.com/intl/en-US/gmail/');
-    //     // await page.getByRole('link', { name: 'Sign in' }).click();
-    //     await url.openGmailUrl();
-    //     await login.gmailAccount('kdhanraj21@gmail.com', 'Anurag@21')
-    // });
 });

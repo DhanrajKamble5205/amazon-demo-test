@@ -1,11 +1,12 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
+import { console } from 'inspector';
 //import { Urls } from './url';
 
 export class LoginPage {
 
     readonly page: Page;
     readonly logUsername: Locator;
-    readonly radioButton: Locator;
+    readonly logPassword: Locator;
     readonly continueButton: Locator;
     readonly sendOtp: Locator;
     readonly selectLoginOption: Locator;
@@ -16,7 +17,9 @@ export class LoginPage {
     readonly gmailText: Locator;
     readonly copyOtp: Locator;
     readonly enterOtp: Locator;
-
+    readonly AmzSingIn: Locator;
+    readonly verifyLoggedIn: Locator;
+    readonly loggedOff: Locator;
 
 
     constructor(page: Page) {
@@ -26,9 +29,12 @@ export class LoginPage {
         this.selectLoginOption = page.getByRole('link', { name: 'Hello, sign in' });
         this.logUsername = page.getByRole('textbox', { name: 'email' });
         this.continueButton = page.getByRole('button', { name: 'Continue' });
-        this.radioButton = page.getByRole('radio');
+        this.logPassword = page.getByRole('textbox', { name: 'password' });
         this.sendOtp = page.getByRole('button', { name: 'Send OTP' });
         this.enterOtp = page.getByRole('textbox', { name: 'Enter OTP' });
+        this.AmzSingIn = page.getByRole('button', { name: 'Sign in' });
+        this.verifyLoggedIn = page.locator('#nav-link-accountList-nav-line-1');
+        this.loggedOff = page.getByRole('link', { name: 'Sign Out' });
 
         
         //Gamil Locators
@@ -41,14 +47,33 @@ export class LoginPage {
         this.copyOtp = page.getByRole('cell')
     }
 
-    async AmzLoginAction(username: string) {
+    async AmzLoginAction(username: string, password: string) {
         await this.selectLoginOption.click();
         await this.logUsername.fill(username);
         await this.continueButton.click();
-        await this.radioButton.first().click();
-        await this.sendOtp.click();
+        await this.logPassword.fill(password);
+        await this.AmzSingIn.click();
+        await this.page.waitForTimeout(5000);
+        
     }
     
+    async AmzLoginVerify() {
+        const loginText = (await this.verifyLoggedIn.innerText()).trim()
+        console.log("Logged in user is: ", loginText);
+        // const expected = "Dhanraj";  
+
+        // if (loginText == expected) {
+        //     console.log("Amazon Login Successful: ", expected);
+        // } else {
+        //     console.log("Amazon Login Failed. Found text:", loginText);
+        // }
+    }
+        
+    async AmzLogoff() {
+        await this.verifyLoggedIn.click();
+        await this.loggedOff.click();
+    }
+
     async gmailAccount(browser: any) {
         //EmailID: string, gmailPass: string
   const context = await browser.newContext({
@@ -58,9 +83,9 @@ export class LoginPage {
   const page = await context.newPage();
 
   await page.goto('https://accounts.google.com/signin');
-  await page.locator('input[type="email"]').fill('yourEmail@gmail.com');
+  await page.locator('input[type="email"]').fill('kdhanraj21@gmail.com');
   await page.getByRole('button', { name: 'Next' }).click();
-  await page.locator('input[type="password"]').fill('yourPassword');
+  await page.locator('input[type="password"]').fill('Anurag@21');
   await page.getByRole('button', { name: 'Next' }).click();
 
   await page.waitForURL('https://mail.google.com/*');
