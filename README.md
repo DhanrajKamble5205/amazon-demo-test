@@ -1,125 +1,175 @@
-🧩 Amazon.in – Playwright Automation Test Suite Design
-🎯 Goal
+1. Setup: Ensure Copilot Works in VS Code
 
-To verify key user workflows and critical UI/functional components on the Amazon India site.
+Before using Copilot for Playwright:
 
-🧪 1. Smoke Tests (Basic Functionality)
-Test Case	Description	Expected Result
-TC001 – Verify Homepage Load	Launch https://www.amazon.in and wait for logo and search bar.	Page loads successfully; Amazon logo and search bar are visible.
-TC002 – Verify Navigation Menu Items	Verify top menu tags: “Fresh”, “MX Player”, “Sell”, etc. (from your JSON file).	All expected navigation tags are visible and clickable.
-TC003 – Verify Footer Links	Scroll down and validate presence of “About Us”, “Careers”, “Help” links.	Footer section loads, all key links visible.
-🧭 2. Search and Filter Scenarios
-Test Case	Steps	Expected Result
-TC004 – Product Search	Search for “laptop” and wait for results.	Product grid appears, contains keyword “laptop”.
-TC005 – Apply Filter and Sort	After search, apply filter (e.g., Brand = HP) and sort “Price: Low to High”.	Results update according to filter and sort order.
-TC006 – Validate Product Details Page	Click first product → navigate to detail page.	Title, price, “Add to Cart” button visible.
+Install GitHub Copilot and Copilot Chat extensions
 
-Playwright Techniques Used:
-➡️ page.locator(), expect(), page.waitForSelector(), page.getByRole(), dynamic waits, assertion chaining.
+Create a Playwright project:
 
-🛒 3. Cart and Checkout Flow
-Test Case	Steps	Expected Result
-TC007 – Add Product to Cart	From product page, click “Add to Cart”.	Cart icon shows updated item count.
-TC008 – Remove Product from Cart	Go to cart, remove item.	Cart becomes empty.
+npm init playwright@latest
 
-Techniques:
-➡️ Multi-page handling, pop-up dismissal, conditional checks.
 
-🔐 4. Login & Session Handling
-Test Case	Steps	Expected Result
-TC009 – Verify Login (Valid Credentials)	Enter username/password from .env file, click Sign In.	Greeting like “Hello, <Name>” appears.
-TC010 – Invalid Login Handling	Use wrong password.	Error message “Your password is incorrect.” displayed.
+Open the project in VS Code
 
-Techniques:
-➡️ Page Object Model (POM), .env for credentials, conditional assertions, screenshot capture on failure.
+Copilot will automatically start suggesting code
 
-📸 5. UI Validation & Screenshot
-Test Case	Steps	Expected Result
-TC011 – Visual Regression Check	Capture screenshot of top banner and compare with baseline.	Images match (no major visual difference).
+🧠 2. How to Ask Copilot to Generate Playwright Tests
 
-Techniques:
-➡️ expect(await page.screenshot()).toMatchSnapshot('banner.png');
+You can ask Copilot directly inside VS Code comments.
 
-📦 6. API & Network Mocking
-Test Case	Steps	Expected Result
-TC012 – Mock Product API	Intercept product search API and mock custom response.	Search results show mocked data.
+Example — write this comment inside a .spec.ts file:
 
-Techniques:
-➡️ page.route(), page.request.get(), page.on('response').
+// Write a Playwright test that logs into Amazon.in using valid credentials.
+// Use page.getByRole, expect assertions, and add a reusable login fixture.
 
-🧰 7. Advanced Techniques
-Feature	Description	Example
-Multiple Tabs	Handle opening of new tab (e.g., clicking product opens new page).	const newTab = await context.waitForEvent('page');
-File Upload	Upload a profile image (if available in Account Settings).	input.setInputFiles('tests/data/photo.png');
-Keyboard and Mouse Actions	Hover menus, keyboard shortcuts.	await page.hover('text=Account & Lists');
-Assertions with Soft Expect	Continue test even after minor validation fails.	expect.soft(locator).toBeVisible();
-Tracing & Video	Enable trace viewer for debugging.	In config: trace: 'on-first-retry', video: 'retain-on-failure'.
-⚙️ 8. Test Utilities Setup
 
-playwright.config.ts
+➡️ Copilot will auto-generate a complete test.
 
-import { defineConfig } from '@playwright/test';
+🎯 Example of What Copilot Generates
 
-export default defineConfig({
-  testDir: './tests',
-  timeout: 30 * 1000,
-  reporter: [['line'], ['html', { outputFolder: 'playwright-report' }]],
-  use: {
-    baseURL: 'https://www.amazon.in/',
-    headless: true,
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
-    trace: 'on-first-retry'
-  },
+You write:
+
+// Write a test script that verifies search functionality on Amazon.in
+
+
+Copilot autogenerates something like:
+
+import { test, expect } from "@playwright/test";
+
+test("Verify Amazon search results", async ({ page }) => {
+  await page.goto("https://www.amazon.in/");
+  await page.getByPlaceholder("Search Amazon.in").fill("laptop");
+  await page.keyboard.press("Enter");
+
+  await expect(page.locator(".s-search-results")).toBeVisible();
 });
 
-🧱 Folder Structure Example
-project/
-├── tests/
-│   ├── amazon-login.spec.ts
-│   ├── amazon-search.spec.ts
-│   ├── amazon-cart.spec.ts
-│   └── amazon-nav.spec.ts
-├── pages/
-│   ├── amz-login.ts
-│   ├── amz-search.ts
-│   └── amz-cart.ts
-├── data/
-│   └── data.json
-├── .env
-└── playwright.config.ts
+✨ 3. Using Copilot Chat to Generate Tests
 
-📊 Expected Deliverables
+Open Copilot Chat:
 
-✅ End-to-end tests (search → add to cart → remove → logout)
+Press: Ctrl + Shift + I
 
-✅ Modular POM design
+Ask:
 
-✅ JSON & .env data usage
+Generate 10 Playwright test cases for Amazon.in covering login, search, add to cart, checkout, and filter tests. Use Page Objects.
 
-✅ Network mocking, screenshots, traces, and multiple reporters
+Copilot will generate:
+
+full test cases
+
+page object models
+
+reusable fixtures
+
+locators
+
+edge cases
+
+You can copy them directly into your project.
+
+🧩 4. Use Copilot to Autogenerate Page Object Models
+
+Inside a new file:
+
+// Create a Playwright POM for Amazon login page using getByRole locators
 
 
-Amazon.in – Playwright Automation Test Suite
-(Updated with API Testing)
-9■■ API Testing Scenarios
-1 TC013 – Validate Product Search API: Send GET request to Amazon product search endpoint
-with keyword (e.g., 'mobile'). Expected: Response 200 OK and contains results.
-2 TC014 – Verify Product Details API: Validate that product details API returns correct product
-title, price, and availability status. Expected: All fields present and valid.
-3 TC015 – Cart Service API Validation: Mock or intercept add-to-cart API request to verify
-payload and response status. Expected: Response 200 OK and correct item count.
-4 TC016 – Login Authentication API: Validate login endpoint using POST request with valid
-credentials from .env. Expected: Response 200 OK with session token.
-5 TC017 – Error Handling for Invalid Inputs: Send malformed or unauthorized requests to
-endpoints. Expected: Response 400/401 with correct error messages.
-■ API Test Techniques Used
-- Using Playwright’s built-in **APIRequestContext** for API calls. - Verifying response codes,
-headers, and JSON schema. - Chaining API calls (e.g., login → get cart → add item → verify total).
-- Mocking backend responses with `page.route()` for frontend tests. - Integration with UI tests:
-Verify UI reflects backend API changes.
-■ Example API Test (Playwright)
-test('Verify Amazon product search API', async ({ request }) => { const response =
-await request.get('https://www.amazon.in/s?k=laptop');
-expect(response.status()).toBe(200); const body = await response.text();
-expect(body).toContain('Laptop'); });
+Copilot will generate:
+
+export class LoginPage {
+  constructor(private page: Page) {}
+
+  username = this.page.getByLabel("Email or mobile phone number");
+  password = this.page.getByLabel("Password");
+  loginBtn = this.page.getByRole("button", { name: "Sign in" });
+
+  async login(user: string, pass: string) {
+    await this.username.fill(user);
+    await this.password.fill(pass);
+    await this.loginBtn.click();
+  }
+}
+
+⚡ 5. Use Copilot for API Testing in Playwright
+
+Ask Copilot:
+
+// Write a Playwright API test to fetch products
+
+
+Copilot will generate:
+
+test("API: Fetch products", async ({ request }) => {
+  const res = await request.get("https://fakestoreapi.com/products");
+  expect(res.ok()).toBeTruthy();
+  
+  const data = await res.json();
+  expect(data.length).toBeGreaterThan(0);
+});
+
+🧪 6. Use Copilot for Data-Driven Testing
+
+Ask:
+
+// Write a data-driven test in Playwright for login using multiple credentials
+
+
+Copilot generates:
+
+const testData = [
+  ["valid", "user1@gmail.com", "Pass@123"],
+  ["invalid", "wrong@gmail.com", "12345"],
+];
+
+for (const [name, email, pass] of testData) {
+  test(`Login test: ${name}`, async ({ page }) => {
+    await page.goto("/login");
+    await page.fill("#email", email);
+    await page.fill("#password", pass);
+    await page.click("button[type=submit]");
+  });
+}
+
+🤖 7. Auto-Generate Test Case Docs with Copilot
+
+In a markdown file:
+
+<!-- Write 20 real-time test cases for Amazon.in with steps & expected results -->
+
+
+Copilot generates the entire document instantly.
+
+🔥 Tips to Get the Best Out of Copilot for Playwright
+✔ Use natural language
+
+Copilot understands plain English.
+
+✔ Start with a comment
+
+Copilot becomes very accurate.
+
+✔ Generate → Then Refine
+
+Tell Copilot:
+
+“optimize the locator strategy”
+
+“convert this to POM”
+
+“add reference fixture”
+
+“add screenshot on failure”
+
+✔ Ask Copilot to explain the code
+
+Select code → Right-click → Copilot: Explain
+
+🎁 If you want…
+
+I can generate for you:
+
+✅ A full Playwright project using POM + fixtures
+✅ Complete test suite for Amazon / Flipkart / your app
+✅ Interview-ready Playwright practice tasks with solutions
+✅ Copilot prompt library to automate tests 5× faster
