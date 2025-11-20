@@ -1,0 +1,6 @@
+# Show report command
+npx playwright show-report
+
+# Run testcase manually on terminal
+npx playwright test /api/firstApi.spec.ts
+
