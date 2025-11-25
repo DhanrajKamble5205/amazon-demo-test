@@ -36,7 +36,7 @@ which is read-only (cannot be reassigned after initialization). */
         this.navBar = page.locator('#nav-xshop-container, #nav-xshop');
     }
 
-    async AmzLoginAction(username: string, password: string) {
+    async AmzLogin(username: string, password: string) {
         await this.selectLoginOption.click();
         await this.logUsername.fill(username);
         await this.continueButton.click();
@@ -53,7 +53,7 @@ which is read-only (cannot be reassigned after initialization). */
         console.log("✅ Login verification passed! Actual text:", actualText?.trim());
     }
 
-    async amzNavigationBarItems() {
+    async AmzNavigationBarItems() {
         const expectedTags = data.expectedTags;
         const actualTags = await this.navBar.locator('a').allTextContents();
         console.log('Actual Tags:', actualTags);

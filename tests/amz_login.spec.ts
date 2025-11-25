@@ -12,7 +12,7 @@ test.describe('Amazon Login Functionality', () => {
         const password = process.env.AMZ_PASSWORD!;
 
         await url.openAmazonUrl();
-        await login.AmzLoginAction(username, password);
+        await login.AmzLogin(username, password);
         await login.AmzLoginVerify();
         await login.amzNavigationBarItems();
         await login.AmzLogoff();  
