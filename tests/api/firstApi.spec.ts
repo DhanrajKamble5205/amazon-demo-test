@@ -1,5 +1,6 @@
 import {test, expect} from '@playwright/test'
-
+// use command to run API: npx playwright test demoBlazeApi.spec.js
+// to check result: npx playwright show-report
 test('First API Test', async ({request})=> { // request is instance of APIRequestContext
     
     const response = await request.get('https://jsonplaceholder.typicode.com/posts/1');
